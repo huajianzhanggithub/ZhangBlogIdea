@@ -1,28 +1,26 @@
+from ZhangBlogIdea.base_admin import BaseOwnerAdmin
+from ZhangBlogIdea.custom_site import custom_site
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
-from ZhangBlogIdea.custom_site import custom_site
 from .adminforms import PostAdminForm
 from .models import Post, Category, Tag
 
 
-class PostInline(admin.TabularInline):  # StackedInline样式不同
+class PostInline(admin.TabularInline):  # 可选择继承自StackedInline,以获取不同的展示样式
+
     fields = ('title', 'desc')
-    extra = 0  # 控制额外多一个
+    extra = 0  # extra参数控制额外多几个
     model = Post
 
 
 # Register your models here.
 @admin.register(Category, site=custom_site)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(BaseOwnerAdmin):
     inlines = [PostInline, ]
     list_display = ('name', 'status', 'is_nav', 'owner', 'created_time', 'post_count')
     fields = ('name', 'status', 'is_nav')
-
-    def save_model(self, request, obj, form, change):
-        obj.owner = request.user
-        return super(CategoryAdmin, self).save_model(request, obj, form, change)
 
     def post_count(self, obj):
         return obj.post_set.count()
@@ -31,13 +29,9 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Tag, site=custom_site)
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(BaseOwnerAdmin):
     list_display = ('name', 'status', 'owner', 'created_time')
     fields = ('name', 'status')
-
-    def save_model(self, request, obj, form, change):
-        obj.owner = request.user
-        return super(TagAdmin, self).save_model(request, obj, form, change)
 
 
 class CategoryOwnerFilter(admin.SimpleListFilter):
@@ -57,7 +51,7 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
 
 
 @admin.register(Post, site=custom_site)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(BaseOwnerAdmin):
     form = PostAdminForm
     list_display = [
         'title', 'category', 'status',
@@ -73,7 +67,8 @@ class PostAdmin(admin.ModelAdmin):
 
     # 编辑页面
     save_on_top = True
-    exclude = ('owner',)
+
+    exclude = ['owner']
 
     # fields = (
     #     ('category', 'title'),
@@ -101,6 +96,8 @@ class PostAdmin(admin.ModelAdmin):
             'fields': ('tag',),
         })
     )
+    # filter_horizontal = ('tag', )
+    filter_vertical = ('tag',)
 
     def operator(self, obj):
         return format_html(
@@ -109,14 +106,6 @@ class PostAdmin(admin.ModelAdmin):
         )
 
     operator.short_description = '操作'
-
-    def save_model(self, request, obj, form, change):
-        obj.owner = request.user
-        return super(PostAdmin, self).save_model(request, obj, form, change)
-
-    def get_queryset(self, request):
-        qs = super(PostAdmin, self).get_queryset(request)
-        return qs.filter(owner=request.user)
 
     class Media:
         css = {
