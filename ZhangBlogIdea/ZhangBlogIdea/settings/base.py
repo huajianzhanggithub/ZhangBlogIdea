@@ -29,6 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'ZhangBlogIdea',
     'blog',
     'config',
     'comment',
