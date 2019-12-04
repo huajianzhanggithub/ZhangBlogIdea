@@ -1,0 +1,28 @@
+{% extends "./base.html" %}
+{% block title %} {{ post.title }} {% endblock %}
+
+{% block main %}
+    {% if post %}
+    <h1>{{ post.title }}</h1>
+<div>
+        <span class="text-primary">作者:
+            <a class="text-primary" href="#">{{ post.owner.username }}</a>
+        </span>
+    <span class="text-success">分类:
+            <a class="text-success" href="{% url 'category-list' post.category.id %}">
+                {{ post.category.name }}
+            </a>
+        </span>
+    <span class="text-info">标签:
+            {% for tag in post.tag.all %}
+            <a class="text-info" href="{% url 'tag-list' tag.id %}">{{ tag.name }}</a>
+            {% endfor %}
+        </span>
+    <span class="text-danger">创建日期:{{ post.created_time }}</span>
+</div>
+<hr/>
+    <p>
+        {{ post.content }}
+    </p>
+    {% endif %}
+{% endblock %}
