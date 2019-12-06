@@ -1,0 +1,29 @@
+/*
+自己设计的,用于base.html模板的样式文件
+*/
+    html,
+    body {
+
+        height: 100%;
+
+    }
+
+    body {
+
+        margin: 0;
+
+        background-repeat: no-repeat;
+
+        background-size: cover;
+
+        background-position: center;
+
+        background-attachment: fixed;
+
+        background-image: url(https://ss1.bdstatic.com/kvoZeXSm1A5BphGlnYG/skin_zoom/488.jpg?2);
+
+    }
+
+    .post {
+       margin-bottom: 5px;
+    }

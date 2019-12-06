@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 from blog.models import Post, Category, Tag
 from config.models import Sidebar
@@ -18,9 +19,32 @@ class CommonViewMixin:
 
 class IndexView(CommonViewMixin, ListView):
     queryset = Post.latest_posts()
-    paginate_by = 6
+    paginate_by = 3
     context_object_name = 'post_list'
     template_name = 'blog/list.html'
+
+
+class SearchView(IndexView):
+    def get_context_data(self):
+        context = super().get_context_data()
+        context.update({
+            'keyword': self.request.GET.get('keyword', '')
+        })
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        keyword = self.request.GET.get('keyword')
+        if not keyword:
+            return queryset
+        return queryset.filter(Q(title__icontains=keyword) | Q(desc__icontains=keyword))
+
+
+class AuthorView(IndexView):
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        author_id = self.kwargs.get('owner_id')
+        return queryset.filter(owner_id=author_id)
 
 
 class CategoryView(IndexView):
@@ -44,7 +68,7 @@ class TagView(IndexView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         tag_id = self.kwargs.get('tag_id')
-        tag = get_object_or_404(Tag, tag_id=tag_id)
+        tag = get_object_or_404(Tag, pk=tag_id)
         context.update({
             'tag': tag,
         })
@@ -54,7 +78,7 @@ class TagView(IndexView):
         """ 重写Queryset根据标签过滤"""
         queryset = super().get_queryset()
         tag_id = self.kwargs.get('tag_id')
-        return queryset.filter(tag_id=tag_id)
+        return queryset.filter(tag__id=tag_id)
 
 
 class PostDetailView(CommonViewMixin, DetailView):

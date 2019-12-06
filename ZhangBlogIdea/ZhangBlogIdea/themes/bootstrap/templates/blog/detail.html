@@ -6,7 +6,7 @@
     <h1>{{ post.title }}</h1>
 <div>
         <span class="text-primary">作者:
-            <a class="text-primary" href="#">{{ post.owner.username }}</a>
+            <a class="text-primary" href="{% url 'author' post.owner.id %}">{{ post.owner.username }}</a>
         </span>
     <span class="text-success">分类:
             <a class="text-success" href="{% url 'category-list' post.category.id %}">

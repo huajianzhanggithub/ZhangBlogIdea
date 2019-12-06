@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 
+{% load static %}
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}首页{% endblock %}- 张华健的博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/popper.js/1.15.0/umd/popper.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <style>
-        .post {
-            margin-bottom: 5px;
-        }
-
-    </style>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/basecss.css' %}">
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
 </head>
 
 <body>
@@ -32,17 +28,18 @@
                 </li>
                 {% endfor %}
             </ul>
-            <form class="form-inline my-2 my-lg-0" role="form" method="GET">
+            <form class="form-inline mr-2 my-lg-0" role="form" method="GET" action="/search/">
                 <div class="form-group">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success text-light" data-toggle='tooltip'
-                            title="请输入标题或者分类关键字进行搜索!" data-placement="down" type="submit">搜索
+                    <input class="form-control mr-sm-2" type="search" name="keyword" placeholder="Search"
+                           aria-label="Search" value="{{ keyword }}" required>
+                    <button class="btn btn-outline-success text-light" data-toggle='tooltips'
+                            title="请输入文章标题或者作者进行搜索!" data-placement="down" type="submit">搜索
                     </button>
                 </div>
             </form>
         </div>
     </nav>
-    <div class="jumbotron">
+    <div class="jumbotron bg-dark text-white">
         <h1 class="display-4">张华健的博客</h1>
         <p class="lead">基于Django的多人博客系统</p>
     </div>
@@ -50,8 +47,10 @@
 <div class="container main">
     <div class="row">
         <div class="col-9 post-list">
-            {% block main %}
-            {% endblock %}
+            <div class="bg-light">
+                {% block main %}
+                {% endblock %}
+            </div>
         </div>
         <div class="col-3">
             {% block sidebar %}
@@ -72,8 +71,8 @@
 
 <footer class="footer text-center">
     {% block footer %}
-    <div class="container">
-        <hr>
+    <div class="container bg-dark">
+        <hr/>
         <nav class="nav nav-justified justify-content-center category">
             {% for cate in categories %}
             <li class="nav-item">
@@ -82,7 +81,7 @@
             {% endfor %}
         </nav>
     </div>
-    <div class="container power">
+    <div class="container power bg-dark">
         <span class="text-muted">Power by 278554189@qq.com</span>
     </div>
     {% endblock %}
