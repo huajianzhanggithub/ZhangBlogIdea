@@ -1,6 +1,6 @@
-from django.views.generic import ListView, DetailView
-from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
+from django.views.generic import ListView, DetailView
 
 from blog.models import Post, Category, Tag
 from config.models import Sidebar
@@ -82,7 +82,7 @@ class TagView(IndexView):
 
 
 class PostDetailView(CommonViewMixin, DetailView):
-    queryset = Post.objects.filter(status=Post.STATUS_NORMAL)
+    queryset = Post.latest_posts()
     template_name = 'blog/detail.html'
     context_object_name = 'post'
     pk_url_kwarg = 'post_id'

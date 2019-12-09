@@ -1,9 +1,10 @@
 {% extends "./base.html" %}
+{% load comment_block %}
 {% block title %} {{ post.title }} {% endblock %}
 
 {% block main %}
-    {% if post %}
-    <h1>{{ post.title }}</h1>
+{% if post %}
+<h1>{{ post.title }}</h1>
 <div>
         <span class="text-primary">作者:
             <a class="text-primary" href="{% url 'author' post.owner.id %}">{{ post.owner.username }}</a>
@@ -21,8 +22,9 @@
     <span class="text-danger">创建日期:{{ post.created_time }}</span>
 </div>
 <hr/>
-    <p>
-        {{ post.content }}
-    </p>
-    {% endif %}
+<p>
+    {{ post.content }}
+</p>
+{% comment_block request.path %}
+{% endif %}
 {% endblock %}

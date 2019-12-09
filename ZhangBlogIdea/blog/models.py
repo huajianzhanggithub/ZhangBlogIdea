@@ -103,8 +103,8 @@ class Post(models.Model):
         except Tag.DoesNotExist:
             tag = None
         else:
-            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL)\
-                .select_related('owner', 'category')
+            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL) \
+                .select_related('owner', 'category', 'tag', 'created_time')
         return post_list, tag
 
     @staticmethod
@@ -114,15 +114,15 @@ class Post(models.Model):
         except Category.DoesNotExist:
             category = None
         else:
-            post_list = category.post_set.filter(status=Post.STATUS_NORMAL)\
-                .select_related('owner', 'category')
+            post_list = category.post_set.filter(status=Post.STATUS_NORMAL) \
+                .select_related('owner', 'category', 'tag', 'created_time')
         return post_list, category
 
     @classmethod
     def latest_posts(cls):
-        queryset = cls.objects.filter(status=cls.STATUS_NORMAL).only('title', 'owner', 'category')
+        queryset = cls.objects.filter(status=cls.STATUS_NORMAL).select_related('owner', 'category')
         return queryset
 
     @classmethod
     def hot_posts(cls):
-        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv').only('id', 'title')
+        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv').only('title')

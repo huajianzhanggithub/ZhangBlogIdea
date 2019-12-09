@@ -1,0 +1,35 @@
+<hr class="bg-success"/>
+<div class="comment row">
+    <form class="form-group col-md-8 offset-md-2" action="/comment/" method="POST">
+        {% csrf_token %}
+        <input name="target" type="hidden" value="{{ target }}"/>
+        {% for comment in comment_form %}
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">{{comment.label }}</span>
+            </div>
+            {{ comment }}
+        </div>
+        {% endfor %}
+        <div class="text-center">
+            <input type="submit" class="btn btn-success" value="提交评论"/>
+        </div>
+    </form>
+
+    <!--    评论列表-->
+    <div>
+        <ul class="list-group">
+            {% for comment in comment_list %}
+            <li class="list-group-item">
+                <div class="nickname">
+                    <a href="{{ comment.website }}">{{ comment.nickname }}</a>
+                    <span>{{ comment.created_time }}</span>
+                </div>
+                <div class="comment-content">
+                    {{ comment.content }}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
