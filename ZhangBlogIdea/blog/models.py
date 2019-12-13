@@ -1,5 +1,8 @@
+import mistune
 from django.contrib.auth.admin import User
 from django.db import models
+
+from django.utils.functional import cached_property
 
 
 # Create your models here.
@@ -74,9 +77,10 @@ class Post(models.Model):
         (STATUS_DRAFT, '草稿')
     )
 
-    title = models.CharField(max_length=255, verbose_name='标题')
-    desc = models.CharField(max_length=1024, blank=True, verbose_name='摘要')
+    title = models.CharField(max_length=256, verbose_name='标题')
+    desc = models.CharField(max_length=256, blank=True, verbose_name='摘要')
     content = models.TextField(verbose_name='正文', help_text='正文必须为MarkDown格式')
+    content_html = models.TextField(verbose_name="正文HTML代码", blank=True, editable=False)
     status = models.PositiveIntegerField(default=STATUS_NORMAL,
                                          choices=STATUS_ITEMS,
                                          verbose_name='状态')
@@ -126,3 +130,12 @@ class Post(models.Model):
     @classmethod
     def hot_posts(cls):
         return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv').only('title')
+
+    @cached_property
+    def tags(self):
+        return ','.join(self.tag.values_list('name', flat=True))
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.content_html = mistune.markdown(self.content)
+        super().save()

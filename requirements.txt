@@ -1,3 +1,5 @@
+xadmin
+mistune
 -i http://pypi.doubanio.com/simple/
 Django
 -e .
