@@ -2,8 +2,10 @@ import mistune
 from django.contrib.auth.admin import User
 from django.db import models
 
-
 # Create your models here.
+from django.utils.functional import cached_property
+
+
 class Category(models.Model):
     STATUS_NORMAL = 1
     STATUS_DELETE = 0
@@ -133,3 +135,7 @@ class Post(models.Model):
              update_fields=None):
         self.content_html = mistune.markdown(self.content)
         super().save()
+
+    @cached_property
+    def tags(self):
+        return ','.join(self.tag.values_list('name', flat=True))
