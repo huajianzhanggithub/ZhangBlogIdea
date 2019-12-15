@@ -39,5 +39,5 @@ urlpatterns = [
     path('author/<int:owner_id>/', AuthorView.as_view(), name='author'),
     path('comment/', CommentView.as_view(), name='comment'),
     # path('super_admin/', xadmin.site.urls, name='super-admin'),
-    path('admin/', xadmin.site.urls, name='xadmin'),
+    path('xadmin/', xadmin.site.urls, name='xadmin'),
 ]
