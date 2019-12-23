@@ -81,15 +81,18 @@ class PostAdmin(BaseOwnerAdmin):
         ('内容', {
             'fields': (
                 'desc',
+                'is_md',
+                'content_md',
+                'content_ck',
                 'content',
             ),
         }),
         ('额外信息', {
             'classes': ('wide',),
             'fields': ('tag',),
-        })
+        }),
     )
-    filter_vertical = ('tag',)
+    filter_horizonal = ('tag',)
 
     def operator(self, obj):
         return format_html(
@@ -98,13 +101,12 @@ class PostAdmin(BaseOwnerAdmin):
         )
 
     operator.short_description = '操作'
-    #
+
     # class Media:
-    #     css = {
-    #         'all': ("https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css",),
-    #     }
-    #     js = ('https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.js',)
-    #
+    # css = {
+    #     'all': ("https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css",),
+    # }
+    # js = ('js\jquery-3.4.1.min.js',)
 
 
 @admin.register(LogEntry, site=custom_site)

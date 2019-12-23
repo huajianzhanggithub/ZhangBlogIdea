@@ -15,16 +15,13 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '!^+v$dksgvi7tmaed6m-pmta5*gdcdshx4*c78wj0^*cw7y9tp'
 
-
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -33,6 +30,8 @@ INSTALLED_APPS = [
     'blog',
     'config',
     'comment',
+    'ckeditor',
+    'ckeditor_uploader',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -76,7 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ZhangBlogIdea.wsgi.application'
 
-
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -94,7 +92,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -119,3 +116,21 @@ STATIC_ROOT = '/tmp/static'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'themes', THEME, "static"),
 ]
+
+# CKEDITOR CONFIGS
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 600,
+        'width': 1800,
+        'tabSpaces': 4,
+        'extraPlugins': 'codesnippet',  # 配置代码插件
+    },
+}
+
+# 上传图片并加水印
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+CKEDITOR_UPLOAD_PATH = "article_images"
+DEFAULT_FILE_STORAGE = 'ZhangBlogIdea.storage.WatermarkStorage'

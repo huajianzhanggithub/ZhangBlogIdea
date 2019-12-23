@@ -13,6 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls import url, include
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps import views as sitemap_views
 from django.urls import path
@@ -29,14 +32,15 @@ from config.views import LinkListView
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('category/<int:category_id>/', CategoryView.as_view(), name='category-list'),
-    path('tag/<int:tag_id>/', TagView.as_view(), name='tag-list'),
-    path('post/<int:post_id>.html', PostDetailView.as_view(), name='post-detail'),
-    path('links/', LinkListView.as_view(), name='links'),
-    path('rss/', LatestPostFeed(), name='rss'),
-    path('sitemap.xml/', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
-    path('search/', SearchView.as_view(), name='search'),
-    path('author/<int:owner_id>/', AuthorView.as_view(), name='author'),
-    path('comment/', CommentView.as_view(), name='comment'),
-    path('super_admin/', admin.site.urls, name='super-admin'),
-    path('admin/', custom_site.urls, name='admin'),
-]
+                  path('tag/<int:tag_id>/', TagView.as_view(), name='tag-list'),
+                  path('post/<int:post_id>.html', PostDetailView.as_view(), name='post-detail'),
+                  path('links/', LinkListView.as_view(), name='links'),
+                  path('rss/', LatestPostFeed(), name='rss'),
+                  path('sitemap.xml/', sitemap_views.sitemap, {'sitemaps': {'posts': PostSitemap}}),
+                  path('search/', SearchView.as_view(), name='search'),
+                  path('author/<int:owner_id>/', AuthorView.as_view(), name='author'),
+                  path('comment/', CommentView.as_view(), name='comment'),
+                  path('super_admin/', admin.site.urls, name='super-admin'),
+                  path('admin/', custom_site.urls, name='admin'),
+                  path('ckeditor/', include('ckeditor_uploader.urls')),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
