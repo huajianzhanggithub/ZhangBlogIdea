@@ -15,7 +15,8 @@ class PostAdminForm(forms.ModelForm):
         queryset=Tag.objects.all(),
         label='标签',
     )
-    content_ck = forms.CharField(widget=CKEditorUploadingWidget(), label='正文', required=False)
+    content_ck = forms.CharField(
+        widget=CKEditorUploadingWidget(), label='正文', required=False)
     content_md = forms.CharField(widget=forms.Textarea(attrs={'style': 'height:600px;width:1786px'}), label='正文',
                                  required=False)
     content = forms.CharField(widget=forms.HiddenInput(), required=False)

@@ -1,3 +1,4 @@
+djangorestframework
 -i http://pypi.doubanio.com/simple/
 Django
 -e .

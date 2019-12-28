@@ -14,13 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import url, include
+from django.conf.urls import include
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.sitemaps import views as sitemap_views
 from django.urls import path
+from rest_framework.documentation import include_docs_urls
+from rest_framework.routers import DefaultRouter
 
-from .custom_site import custom_site
+from blog.apis import PostViewSet, CategoryViewSet, TagViewSet
 from blog.rss import LatestPostFeed
 from blog.sitemap import PostSitemap
 from blog.views import (
@@ -28,10 +30,17 @@ from blog.views import (
 )
 from comment.views import CommentView
 from config.views import LinkListView
+from .custom_site import custom_site
+
+# rest-framework 添加的路由
+router = DefaultRouter()
+router.register(r'post', PostViewSet, basename='api-post')
+router.register(r'category', CategoryViewSet, basename='api-category')
+router.register(r'tag', TagViewSet, basename='api-tag')
 
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
-    path('category/<int:category_id>/', CategoryView.as_view(), name='category-list'),
+                  path('', IndexView.as_view(), name='index'),
+                  path('category/<int:category_id>/', CategoryView.as_view(), name='category-list'),
                   path('tag/<int:tag_id>/', TagView.as_view(), name='tag-list'),
                   path('post/<int:post_id>.html', PostDetailView.as_view(), name='post-detail'),
                   path('links/', LinkListView.as_view(), name='links'),
@@ -43,4 +52,6 @@ urlpatterns = [
                   path('super_admin/', admin.site.urls, name='super-admin'),
                   path('admin/', custom_site.urls, name='admin'),
                   path('ckeditor/', include('ckeditor_uploader.urls')),
+                  path('api/', include(router.urls)),
+                  path('api/docs/', include_docs_urls(title='HuanJianZhang apis')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
