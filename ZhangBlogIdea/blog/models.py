@@ -1,5 +1,6 @@
 import mistune
 from django.contrib.auth.admin import User
+from django.core.cache import cache
 from django.db import models
 
 # Create your models here.
@@ -108,8 +109,7 @@ class Post(models.Model):
         except Tag.DoesNotExist:
             tag = None
         else:
-            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL) \
-                .select_related('owner', 'category', 'tag', 'created_time')
+            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL)
         return post_list, tag
 
     @staticmethod
@@ -124,13 +124,19 @@ class Post(models.Model):
         return post_list, category
 
     @classmethod
-    def latest_posts(cls):
-        queryset = cls.objects.filter(status=cls.STATUS_NORMAL).select_related('owner', 'category')
+    def latest_posts(cls, with_related=True):
+        queryset = cls.objects.filter(status=cls.STATUS_NORMAL)
+        if with_related:
+            queryset = queryset.select_related('owner', 'category')
         return queryset
 
     @classmethod
     def hot_posts(cls):
-        return cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv').only('title')
+        result = cache.get('hot_posts')
+        if not result:
+            result = cls.objects.filter(status=cls.STATUS_NORMAL).order_by('-pv').only('title')
+            cache.set('hot_posts', result, 10 * 60)
+        return result
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):

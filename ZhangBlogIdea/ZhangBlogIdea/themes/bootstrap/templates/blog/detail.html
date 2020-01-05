@@ -21,7 +21,7 @@
             </a>
         </span>
     <span class="text-info">标签:
-            {% for tag in post.tag.all %}
+            {% for tag in post.tags.all %}
             <a class="text-info" href="{% url 'tag-list' tag.id %}">{{ tag.name }}</a>
             {% endfor %}
         </span>

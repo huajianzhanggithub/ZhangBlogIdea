@@ -22,7 +22,7 @@
                                                    href="{% url 'category-list' post.category.id %}">{{ post.category.name }}</a></span>
         <span class="card-link">
         <span class="card-link text-info">标签:</span>
-            {% for tag in post.tag.all %}
+            {% for tag in post.tags.all %}
             <a class="text-info" href="{% url 'tag-list' tag.id %}">{{ tag.name }}</a>
             {% endfor %}
         </span>
